@@ -9,11 +9,11 @@ var numberOfWalls = 20;
 //the number of lines inside the canvas is: numberOfCells - 1
 function drawAllLinesInsideBox(canvas, numberOfCells) {
     var canvasContext = canvas.getContext("2d");
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
     var peaceBetwenCells = canvasWidth / numberOfCells;
-
 
     //creacion de los rectangulos de color rosado palido
     for (var i = 0; i < canvasWidth; i = i + peaceBetwenCells) {
@@ -69,19 +69,21 @@ function getRandomMatrix(numberOfCelss, numberOfWalls) {
 
     //creacion de la matriz con agente(1) paredes(2) y la meta(3)
     var matriz = []
+    for (var i=0;i<numberOfCells;i++)
+        matriz[i] = new Array(numberOfCells);
+    console.log(matriz)
+
     for (var i = 0; i < numberOfCelss; i++) {
-        var arrow = [];
         for (var j = 0; j < numberOfCelss; j++) {
             if (isInList(wallsCoordinates, [i, j]))
-                arrow.push(2);
+                matriz[i][j] = 2;
             else if (goalCoordinates.toString() == [i, j].toString())
-                arrow.push(3)
+                matriz[i][j] = 3;
             else
-                arrow.push(0)
+                matriz[i][j] = 0;
         }
-        matriz.push(arrow)
     }
-    matriz[0][0] = 1;
+    matriz[1][2] = 1;
     console.log(matriz);
     return matriz;
 
@@ -90,7 +92,8 @@ function getRandomMatrix(numberOfCelss, numberOfWalls) {
 var matriz = getRandomMatrix(numberOfCells, numberOfWalls);
 
 
-//funcion que va a pintar el jugador, las paredes, la menta
+//funcion que va a pintar el agente, las paredes, la meta
+//agent:green; walls: black; goal:red
 function drawAgentWallsGoal(numberOfCelss, matriz) {
     var canvasContext = canvas.getContext("2d");
 
@@ -117,3 +120,15 @@ function drawAgentWallsGoal(numberOfCelss, matriz) {
 }
 
 drawAgentWallsGoal(numberOfCells, matriz);
+
+async function doStuff(){
+    
+    drawAllLinesInsideBox(canvas, numberOfCells);
+    drawAgentWallsGoal(numberOfCells,oneStepOfBehavior(numberOfCells,matriz));
+
+    // Sleep for 3 seconds
+    await new Promise(r => setTimeout(r, 1500));
+    doStuff()
+}
+
+doStuff()
