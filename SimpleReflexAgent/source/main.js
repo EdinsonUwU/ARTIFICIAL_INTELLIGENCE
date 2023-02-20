@@ -4,7 +4,7 @@ var canvas = document.getElementById("canvas");
 canvas.width = 480;
 canvas.height = 480;
 var numberOfCells = 8;
-var numberOfWalls = 20;
+var numberOfWalls = 1;
 
 //the number of lines inside the canvas is: numberOfCells - 1
 function drawAllLinesInsideBox(canvas, numberOfCells) {
@@ -83,7 +83,7 @@ function getRandomMatrix(numberOfCelss, numberOfWalls) {
                 matriz[i][j] = 0;
         }
     }
-    matriz[1][2] = 1;
+    matriz[4][4] = 1;
     console.log(matriz);
     return matriz;
 
@@ -127,7 +127,7 @@ async function doStuff(){
     drawAgentWallsGoal(numberOfCells,oneStepOfBehavior(numberOfCells,matriz));
 
     // Sleep for 3 seconds
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 1));
     doStuff()
 }
 
