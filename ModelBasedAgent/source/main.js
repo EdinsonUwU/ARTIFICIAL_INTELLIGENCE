@@ -1,10 +1,10 @@
-import {oneStepOfBehavior} from "/SimpleReflexAgent/source/behaviour.js"
+import { oneStepOfBehavior } from "/ModelBasedAgent/source/behaviour.js"
 
 var canvas = document.getElementById("canvas");
 canvas.width = 480;
 canvas.height = 480;
 var numberOfCells = 8;
-var numberOfWalls = 6;
+var numberOfWalls = 32;
 
 //the number of lines inside the canvas is: numberOfCells - 1
 function drawAllLinesInsideBox(canvas, numberOfCells) {
@@ -43,11 +43,11 @@ function drawAllLinesInsideBox(canvas, numberOfCells) {
 drawAllLinesInsideBox(canvas, numberOfCells);
 
 
-//crear una matriz numberOfCells x numberOfCells llena de ceros
+//crear una matriz numberOfCells x numberOfCelss llena de ceros
 //crear en esa misma funcion, una lista de cordenadas 
 //(i(row) , j(column)) random para los muros. Y una coordenada
 //para el queso.
-function getRandomMatrix(numberOfCells, numberOfWalls) {
+function getRandomMatrix(numberOfCelss, numberOfWalls) {
     //lista de coordenadas de muros
     function isInList(list, element) {
         for (var i = 0; i < numberOfWalls; i++) {
@@ -61,22 +61,22 @@ function getRandomMatrix(numberOfCells, numberOfWalls) {
     //coordenadas de las paredes/obstaculos
     var wallsCoordinates = [];
     for (var i = 0; i < numberOfWalls; i++) {
-        wallsCoordinates.push([Math.floor(Math.random() * numberOfCells), Math.floor(Math.random() * numberOfCells)])
+        wallsCoordinates.push([Math.floor(Math.random() * numberOfCelss), Math.floor(Math.random() * numberOfCelss)])
     }
     //coordenadas del queso
-    var goalCoordinates = [Math.floor(Math.random() * numberOfCells), Math.floor(Math.random() * numberOfCells)]
+    var goalCoordinates = [Math.floor(Math.random() * numberOfCelss), Math.floor(Math.random() * numberOfCelss)]
     while (isInList(wallsCoordinates, goalCoordinates) == true) {
-        goalCoordinates = [Math.floor(Math.random() * numberOfCells), Math.floor(Math.random() * numberOfCells)]
+        goalCoordinates = [Math.floor(Math.random() * numberOfCelss), Math.floor(Math.random() * numberOfCelss)]
     }
 
     //creacion de la matriz con agente(1) paredes(2) y la meta(3)
     var matriz = []
-    for (var i=0;i<numberOfCells;i++)
+    for (var i = 0; i < numberOfCells; i++)
         matriz[i] = new Array(numberOfCells);
     console.log(matriz)
 
-    for (var i = 0; i < numberOfCells; i++) {
-        for (var j = 0; j < numberOfCells; j++) {
+    for (var i = 0; i < numberOfCelss; i++) {
+        for (var j = 0; j < numberOfCelss; j++) {
             if (isInList(wallsCoordinates, [i, j]))
                 matriz[i][j] = 2;
             else if (goalCoordinates.toString() == [i, j].toString())
@@ -91,22 +91,35 @@ function getRandomMatrix(numberOfCells, numberOfWalls) {
 
 }
 
+function create_history_matrix(numberOfCells) {
+    var matriz = []
+    for (var i = 0; i < numberOfCells; i++)
+        matriz[i] = new Array(numberOfCells);
+    for (var i = 0; i < numberOfCells; i++) {
+        for (var j = 0; j < numberOfCells; j++) {
+            matriz[i][j] = 0;
+        }
+    }
+    console.log(matriz)
+    return matriz;
+}
 
+var history_matrix = create_history_matrix(numberOfCells);
+console.log(history_matrix)
 var matriz = getRandomMatrix(numberOfCells, numberOfWalls);
-
 
 
 //funcion que va a pintar el agente, las paredes, la meta
 //agent:green; walls: black; goal:red
-function drawAgentWallsGoal(numberOfCells, matriz) {
+function drawAgentWallsGoal(numberOfCelss, matriz) {
     var canvasContext = canvas.getContext("2d");
 
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
     var peaceBetwenCells = canvasWidth / numberOfCells;
 
-    for (var i = 0; i < numberOfCells; i++) {
-        for (var j = 0; j < numberOfCells; j++) {
+    for (var i = 0; i < numberOfCelss; i++) {
+        for (var j = 0; j < numberOfCelss; j++) {
             if (matriz[i][j] == 1) {
                 canvasContext.fillStyle = "rgba(0, 225, 0, 0.5)";
                 canvasContext.fillRect(i * peaceBetwenCells, j * peaceBetwenCells, peaceBetwenCells, peaceBetwenCells);
@@ -123,12 +136,11 @@ function drawAgentWallsGoal(numberOfCells, matriz) {
     }
 }
 
-drawAgentWallsGoal(numberOfCells, matriz);
 
 async function doStuff(){
-    
     drawAllLinesInsideBox(canvas, numberOfCells);
-    drawAgentWallsGoal(numberOfCells,oneStepOfBehavior(numberOfCells,matriz));
+
+    drawAgentWallsGoal(numberOfCells,oneStepOfBehavior(numberOfCells,matriz,history_matrix));
 
     // Sleep for 3 seconds
     await new Promise(r => setTimeout(r, 250));
@@ -136,3 +148,5 @@ async function doStuff(){
 }
 
 doStuff()
+
+
