@@ -1,10 +1,10 @@
-import { oneStepOfBehavior } from "/ModelBasedAgent/source/behaviour.js"
+import { oneStepOfBehavior } from "/GoalBasedAgent/source/behaviour.js"
 
 var canvas = document.getElementById("canvas");
 canvas.width = 480;
 canvas.height = 480;
 var numberOfCells = 8;
-var numberOfWalls = 0;
+var numberOfWalls = 10;
 
 //the number of lines inside the canvas is: numberOfCells - 1
 function drawAllLinesInsideBox(canvas, numberOfCells) {
@@ -63,9 +63,12 @@ function getRandomMatrix(numberOfCelss, numberOfWalls) {
     for (var i = 0; i < numberOfWalls; i++) {
         wallsCoordinates.push([Math.floor(Math.random() * numberOfCelss), Math.floor(Math.random() * numberOfCelss)])
     }
+
+    var playerX = 1;
+    var playerY = 1;
     //coordenadas del queso
     var goalCoordinates = [Math.floor(Math.random() * numberOfCelss), Math.floor(Math.random() * numberOfCelss)]
-    while (isInList(wallsCoordinates, goalCoordinates) == true) {
+    while (isInList(wallsCoordinates, goalCoordinates) == true || (playerX == goalCoordinates[0] && playerY == goalCoordinates[1])) {
         goalCoordinates = [Math.floor(Math.random() * numberOfCelss), Math.floor(Math.random() * numberOfCelss)]
     }
 
@@ -85,7 +88,7 @@ function getRandomMatrix(numberOfCelss, numberOfWalls) {
                 matriz[i][j] = 0;
         }
     }
-    matriz[4][4] = 1;
+    matriz[playerX][playerY] = 1;
     console.log(matriz);
     return matriz;
 
@@ -137,13 +140,17 @@ function drawAgentWallsGoal(numberOfCelss, matriz) {
 }
 
 
-async function doStuff(){
+async function doStuff() {
     drawAllLinesInsideBox(canvas, numberOfCells);
-
-    drawAgentWallsGoal(numberOfCells,oneStepOfBehavior(numberOfCells,matriz,history_matrix));
-
+    try {
+        drawAgentWallsGoal(numberOfCells, oneStepOfBehavior(numberOfCells, matriz, history_matrix));
+    }
+    catch {
+        console.log("Juego Terminado");
+        return null;
+    }
     // Sleep for 3 seconds
-    await new Promise(r => setTimeout(r, 250));
+    await new Promise(r => setTimeout(r, 500));
     doStuff()
 }
 
