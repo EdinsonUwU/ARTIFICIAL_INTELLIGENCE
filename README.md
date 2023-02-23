@@ -13,8 +13,12 @@ https://user-images.githubusercontent.com/62119357/220959243-09ac0919-d5cd-4e47-
 ### 3. GOAL BASED AGENT
 > Folder: [GoalBasedAgent](https://github.com/EdinsonUwU/ARTIFICIAL_INTELLIGENCE/tree/main/GoalBasedAgent)
 <!---->
-
+https://user-images.githubusercontent.com/62119357/220960986-dad476a1-0f9c-4b1a-b5e8-06eb6c529ae6.mp4
 <!---->
+
+
+
+
 
 
 
