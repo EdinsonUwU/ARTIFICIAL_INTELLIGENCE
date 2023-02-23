@@ -4,7 +4,7 @@ var canvas = document.getElementById("canvas");
 canvas.width = 480;
 canvas.height = 480;
 var numberOfCells = 8;
-var numberOfWalls = 10;
+var numberOfWalls = 0;
 
 //the number of lines inside the canvas is: numberOfCells - 1
 function drawAllLinesInsideBox(canvas, numberOfCells) {
@@ -150,7 +150,7 @@ async function doStuff() {
         return null;
     }
     // Sleep for 3 seconds
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 250));
     doStuff()
 }
 

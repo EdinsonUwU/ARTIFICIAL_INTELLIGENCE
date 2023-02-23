@@ -4,7 +4,7 @@ var canvas = document.getElementById("canvas");
 canvas.width = 480;
 canvas.height = 480;
 var numberOfCells = 8;
-var numberOfWalls = 0;
+var numberOfWalls = 16;
 
 //the number of lines inside the canvas is: numberOfCells - 1
 function drawAllLinesInsideBox(canvas, numberOfCells) {
